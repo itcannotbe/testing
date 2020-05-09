@@ -1,2 +1,2 @@
 # testing
-A mindustry-mod that sandbox utilities
+A mindustry-mod that adds sandbox utilities

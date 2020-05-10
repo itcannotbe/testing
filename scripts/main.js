@@ -46,6 +46,6 @@ indicatorBlock.entityType = prov(()=>extend(TileEntity, {
 indicatorBlock.health = 1;
 indicatorBlock.buildVisibility = BuildVisibility.sandboxOnly;
 indicatorBlock.requirements = [new ItemStack(Items.copper, 1)];
-indicatorBlock.size = 2;
+indicatorBlock.size = 1;
 indicatorBlock.update = true;
 print("Testing loaded successfully");

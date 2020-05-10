@@ -43,11 +43,15 @@ indicatorBlock.entityType = prov(()=>extend(TileEntity, {
         this.getLabels().push(new DamageIndicator(damage));
     }
 }));
+
 indicatorBlock.health = 1;
 indicatorBlock.buildVisibility = BuildVisibility.sandboxOnly;
 indicatorBlock.requirements = [new ItemStack(Items.copper, 1)];
 indicatorBlock.size = 1;
 indicatorBlock.update = true;
+indicatorBlock.displayName = "Indicator block";
+indicatorBlock.description = "Displays damage as labels, Sum of damage recieved in the last second(not exact) is displayed on the bottom.\n\n[yellow]Disclamer: Total damage recieved is not exactly dps.";
+
 //quezler's throughput ported to 5.0
 const throughputVoid = extendContent(ItemVoid, "throughput-void", {
     setBars() {
@@ -121,11 +125,15 @@ liquidThroughputVoid.buildVisibility = BuildVisibility.sandboxOnly;
 liquidThroughputVoid.requirements = [new ItemStack(Items.copper, 1)];
 liquidThroughputVoid.size = 1;
 liquidThroughputVoid.update = true;
+liquidThroughputVoid.displayName = "Liquid display void";
+liquidThroughputVoid.description = "Displays throughput.";
 
 throughputVoid.health = 1;
 throughputVoid.buildVisibility = BuildVisibility.sandboxOnly;
 throughputVoid.requirements = [new ItemStack(Items.copper, 1)];
 throughputVoid.size = 1;
 throughputVoid.update = true;
+throughputVoid.displayName = "Display void";
+throughputVoid.description = "Displays throughput.";
 
 print("Testing loaded successfully");

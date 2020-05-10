@@ -55,8 +55,8 @@ const throughputVoid = extendContent(ItemVoid, "throughput-void", {
         this.bars.add("throughput", func(entity => new Bar(
             prov(()=>"Throughput: " + Strings.fixed(entity.throughput().getMean() * 60, 2) + "/s"),
             prov(() => Pal.items),
-            floatp(() => entity.throughput().getValueCount() / entity.throughput().getWindowSize()))
-        ));
+            floatp(() => 1)
+        )));
     },
     handleItem(item, tile, source) {
         tile.entity.iIncrement();
@@ -77,6 +77,41 @@ throughputVoid.entityType = prov(ent => extend(TileEntity, {
         this._i = 0;
     }
 }));
+const liquidThroughputVoid = extendContent(LiquidVoid, "liquid-throughput-void", {
+    setBars() {
+        this.super$setBars();
+        this.bars.add("throughput", func(entity => new Bar(
+            prov(()=>"Throughput: " + Strings.fixed(entity.throughput().getMean() * 60, 2) + "/s"),
+            prov(() => Pal.items),
+            floatp(() => 1)
+        )));
+    },
+    handleLiquid(tile, source, liquid, amount) {
+        tile.entity.iIncrement(amount);
+    }
+});
+liquidThroughputVoid.entityType = prov(ent => extend(TileEntity, {
+    _i: 0,
+    _window: new WindowedMean(60*10),
+    iIncrement(value) {
+        this._i+=value;
+    },
+    throughput() {
+        return this._window;
+    },
+    update() {
+        this.super$update();
+        this._window.addValue(this._i);
+        this._i = 0;
+    }
+}));
+
+liquidThroughputVoid.health = 1;
+liquidThroughputVoid.buildVisibility = BuildVisibility.sandboxOnly;
+liquidThroughputVoid.requirements = [new ItemStack(Items.copper, 1)];
+liquidThroughputVoid.size = 1;
+liquidThroughputVoid.update = true;
+
 throughputVoid.health = 1;
 throughputVoid.buildVisibility = BuildVisibility.sandboxOnly;
 throughputVoid.requirements = [new ItemStack(Items.copper, 1)];

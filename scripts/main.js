@@ -1,7 +1,28 @@
-function Label(){
+function DamageIndicator(damage){
     this.time = 1;
+    this.damage = damage;
 }
-const indicatorBlock = extendContent(Wall, "indicator-wall", {});
+const indicatorBlock = extendContent(Wall, "indicator-wall", {
+    update(tile){
+        this.super$update(tile);
+        var entity = tile.ent();
+        entity.setLabels(entity.getLabels().filter((lable, index)=>lable.time>0));
+        entity.getLabels().forEach((lable, index)=>{
+            lable.time = Mathf.lerpDelta(lable.time, 0, 1);
+        });
+        var delay = entity.getDelay();
+        if (delay>=60) {
+            var total = 0;
+            entity.getLabels().forEach(label=>total+=label.damage);
+            entity.getLabels().forEach((lable, index)=>{
+                Vars.ui.showLabel(lable.damage, 0.5, tile.drawx(), tile.drawy()+8+(8*index));
+            });
+            Vars.ui.showLabel(total, 0.5, tile.drawx()+8, tile.drawy());
+        }
+        delay+=entity.delta();
+        entity.setDelay(delay);
+    }
+});
 indicatorBlock.entityType = prov(()=>extend(TileEntity, {
     _labels: [],
     getLabels() {
@@ -10,15 +31,20 @@ indicatorBlock.entityType = prov(()=>extend(TileEntity, {
     setLabels(value) {
         this._labels = value;
     },
+    _delay: 0,
+    getDelay() {
+        return this._delay;
+    },
+    setDelay(value) {
+        this._delay = value;
+    },
     damage(damage){
-        this.setLabels(this.getLabels().filter((lable, index)=>lable.time>0));
-        this.getLabels().forEach(lable=>{lable.time = Mathf.lerpDelta(lable.time, 0, 1);});
-        Vars.ui.showLabel(damage, 1, this.tile.drawx(), this.tile.drawy()+8+(8*this.getLabels().length));
-        this.getLabels().push(new Label());
+        this.getLabels().push(new DamageIndicator(damage));
     }
 }));
 indicatorBlock.health = 1;
 indicatorBlock.buildVisibility = BuildVisibility.sandboxOnly;
 indicatorBlock.requirements = [new ItemStack(Items.copper, 1)];
 indicatorBlock.size = 2;
+indicatorBlock.update = true;
 print("Testing loaded successfully");

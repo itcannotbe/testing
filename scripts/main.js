@@ -48,4 +48,39 @@ indicatorBlock.buildVisibility = BuildVisibility.sandboxOnly;
 indicatorBlock.requirements = [new ItemStack(Items.copper, 1)];
 indicatorBlock.size = 1;
 indicatorBlock.update = true;
+//quezler's throughput ported to 5.0
+const throughputVoid = extendContent(ItemVoid, "throughput-void", {
+    setBars() {
+        this.super$setBars();
+        this.bars.add("throughput", func(entity => new Bar(
+            prov(()=>"Throughput: " + Strings.fixed(entity.throughput().getMean() * 60, 2) + "/s"),
+            prov(() => Pal.items),
+            floatp(() => entity.throughput().getValueCount() / entity.throughput().getWindowSize()))
+        ));
+    },
+    handleItem(item, tile, source) {
+        tile.entity.iIncrement();
+    }
+});
+throughputVoid.entityType = prov(ent => extend(TileEntity, {
+    _i: 0,
+    _window: new WindowedMean(60*10),
+    iIncrement() {
+        this._i++;
+    },
+    throughput() {
+        return this._window;
+    },
+    update() {
+        this.super$update();
+        this._window.addValue(this._i);
+        this._i = 0;
+    }
+}));
+throughputVoid.health = 1;
+throughputVoid.buildVisibility = BuildVisibility.sandboxOnly;
+throughputVoid.requirements = [new ItemStack(Items.copper, 1)];
+throughputVoid.size = 1;
+throughputVoid.update = true;
+
 print("Testing loaded successfully");

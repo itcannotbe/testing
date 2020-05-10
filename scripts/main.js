@@ -53,7 +53,7 @@ const throughputVoid = extendContent(ItemVoid, "throughput-void", {
     setBars() {
         this.super$setBars();
         this.bars.add("throughput", func(entity => new Bar(
-            prov(()=>"Throughput: " + Strings.fixed(entity.throughput().getMean() * (60 / Time.delta()), 2) + "/s"),
+            prov(()=>"Throughput: " + Strings.fixed(entity.throughput(), 2) + "/s"),
             prov(() => Pal.items),
             floatp(() => 1)
         )));
@@ -65,23 +65,28 @@ const throughputVoid = extendContent(ItemVoid, "throughput-void", {
 throughputVoid.entityType = prov(ent => extend(TileEntity, {
     _i: 0,
     _window: new WindowedMean(60*10),
+    _throughput: 0,
     iIncrement() {
         this._i++;
     },
     throughput() {
-        return this._window;
+        return this._throughput;
+    },
+    updateThroughput() {
+        this._throughput = this._window.getMean() * (60 / Time.delta())
     },
     update() {
         this.super$update();
         this._window.addValue(this._i);
         this._i = 0;
+        this.updateThroughput();
     }
 }));
 const liquidThroughputVoid = extendContent(LiquidVoid, "liquid-throughput-void", {
     setBars() {
         this.super$setBars();
         this.bars.add("throughput", func(entity => new Bar(
-            prov(()=>"Throughput: " + Strings.fixed(entity.throughput().getMean() * (60 / Time.delta()), 2) + "/s"),
+            prov(()=>"Throughput: " + Strings.fixed(entity.throughput(), 2) + "/s"),
             prov(() => Pal.items),
             floatp(() => 1)
         )));
@@ -93,16 +98,21 @@ const liquidThroughputVoid = extendContent(LiquidVoid, "liquid-throughput-void",
 liquidThroughputVoid.entityType = prov(ent => extend(TileEntity, {
     _i: 0,
     _window: new WindowedMean(60*10),
+    _throughput: 0,
     iIncrement(value) {
         this._i+=value;
     },
     throughput() {
-        return this._window;
+        return this._throughput;
+    },
+    updateThroughput() {
+        this._throughput = this._window.getMean() * (60 / Time.delta());
     },
     update() {
         this.super$update();
         this._window.addValue(this._i);
         this._i = 0;
+        this.updateThroughput();
     }
 }));
 

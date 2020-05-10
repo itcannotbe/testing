@@ -53,7 +53,7 @@ const throughputVoid = extendContent(ItemVoid, "throughput-void", {
     setBars() {
         this.super$setBars();
         this.bars.add("throughput", func(entity => new Bar(
-            prov(()=>"Throughput: " + Strings.fixed(entity.throughput().getMean() * 60, 2) + "/s"),
+            prov(()=>"Throughput: " + Strings.fixed(entity.throughput().getMean() * (60 / Time.delta()), 2) + "/s"),
             prov(() => Pal.items),
             floatp(() => 1)
         )));
@@ -81,7 +81,7 @@ const liquidThroughputVoid = extendContent(LiquidVoid, "liquid-throughput-void",
     setBars() {
         this.super$setBars();
         this.bars.add("throughput", func(entity => new Bar(
-            prov(()=>"Throughput: " + Strings.fixed(entity.throughput().getMean() * 60, 2) + "/s"),
+            prov(()=>"Throughput: " + Strings.fixed(entity.throughput().getMean() * (60 / Time.delta()), 2) + "/s"),
             prov(() => Pal.items),
             floatp(() => 1)
         )));

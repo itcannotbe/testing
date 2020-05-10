@@ -8,19 +8,20 @@ const indicatorBlock = extendContent(Wall, "indicator-wall", {
         var entity = tile.ent();
         entity.setLabels(entity.getLabels().filter((lable, index)=>lable.time>0));
         entity.getLabels().forEach((lable, index)=>{
-            lable.time = Mathf.lerpDelta(lable.time, 0, 1);
+            lable.time = Mathf.lerpDelta(lable.time, 0, 0.80);
         });
         var delay = entity.getDelay();
-        if (delay>=60) {
+        delay+=entity.delta();
+        entity.setDelay(delay);
+        if (delay>=10) {
             var total = 0;
+            entity.setDelay(0);
             entity.getLabels().forEach(label=>total+=label.damage);
             entity.getLabels().forEach((lable, index)=>{
                 Vars.ui.showLabel(lable.damage, 0.5, tile.drawx(), tile.drawy()+8+(8*index));
             });
-            Vars.ui.showLabel(total, 0.5, tile.drawx()+8, tile.drawy());
+            Vars.ui.showLabel(total, 0.5, tile.drawx(), tile.drawy()-8);
         }
-        delay+=entity.delta();
-        entity.setDelay(delay);
     }
 });
 indicatorBlock.entityType = prov(()=>extend(TileEntity, {

@@ -124,6 +124,7 @@ liquidThroughputVoid.health = 1;
 liquidThroughputVoid.buildVisibility = BuildVisibility.sandboxOnly;
 liquidThroughputVoid.requirements = [new ItemStack(Items.copper, 1)];
 liquidThroughputVoid.size = 1;
+liquidThroughputVoid.liquidCapacity = 3000f;
 liquidThroughputVoid.update = true;
 liquidThroughputVoid.localizedName = "Liquid display void";
 liquidThroughputVoid.description = "Displays throughput.";
